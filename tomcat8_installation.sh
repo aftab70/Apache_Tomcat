@@ -5,7 +5,7 @@
 echo "System is updating and upgrading, please wait for a while"
 
 apt-get update -y
-apt-get upgrade -y
+#apt-get upgrade -y
 sudo apt-get install default-jdk -y
 
 
