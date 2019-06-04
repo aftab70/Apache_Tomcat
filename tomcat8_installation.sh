@@ -233,12 +233,6 @@ File to be edit conf/server.xml
 
 
 
-
-
-
-
-
-
 -------------------------------------------------------------------------------------
 
           Configuration of JVM memory for Apache Tomcat 
