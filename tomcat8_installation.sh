@@ -174,9 +174,9 @@ For port 80
                VirtualHost configuration in Apache Tomcat 
 -------------------------------------------------------------------------------------
 
-Your domain must be ping with your tomcat server IP address for virtual host.
+#Your domain must be ping with your tomcat server IP address for virtual host.
 
-File to be edit conf/server.xml
+#File to be edit conf/server.xml
 -------------------------------------------------------------------------------------
 
 <Host name="www.example.com"  appBase="webapps/example/" unpackWARs="true" autoDeploy="true">
@@ -206,7 +206,7 @@ File to be edit conf/server.xml
 </Host>
 
 
-        Port Number based virtual hosting in Apache Tomcat 
+#        Port Number based virtual hosting in Apache Tomcat 
 
 <Service name="service_name">
     <Connector port="PORT_NUMBER" protocol="HTTP/1.1" connectionTimeout="20000" minSpareThreads="10" maxThreads="100" compression="on" compressableMimeType="text/html,text/xml,text/plain" redirectPort="8467" />
@@ -238,7 +238,7 @@ File to be edit conf/server.xml
           Configuration of JVM memory for Apache Tomcat 
 -------------------------------------------------------------------------------------
 
-To configure tomcat need to edit and replace the memory for JVM in Tomcat
+# To configure tomcat need to edit and replace the memory for JVM in Tomcat
 
 sudo nano /etc/systemd/system/tomcat.service
 
