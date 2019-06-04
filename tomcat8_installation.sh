@@ -86,7 +86,6 @@ sudo nano /opt/tomcat/webapps/host-manager/META-INF/context.xml
 sudo systemctl restart tomcat
 
 
-
            Access the Web Interface
 ----------------------------------------
 
