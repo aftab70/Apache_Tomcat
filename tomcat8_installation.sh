@@ -254,5 +254,5 @@ systemctl status tomcat.service
 
 ------------------------------------------------------------------------
 
-            Configuration of open file limit in Apache Tomcat 
-------------------------------------------------------------------------------------
+       Configuration of open file limit in Apache Tomcat 
+------------------------------------------------------------------------
