@@ -1,11 +1,9 @@
    Apache Tomcat setup 8.5.41 with Ubuntu 16.04
---------------------------------------------------------------------------------------------------------------------------------
-
-
+-------------------------------------------------
 
 timedatectl set-timezone Asia/Kolkata
-
 sudo apt-get update -y
+sudo apt-get upgrade -y
 sudo apt-get install default-jdk -y
 sudo groupadd tomcat
 sudo useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
@@ -22,31 +20,9 @@ sudo chown -R tomcat webapps/ work/ temp/ logs/
 sudo update-java-alternatives -l
 sudo nano /etc/systemd/system/tomcat.service
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 sudo nano /etc/systemd/system/tomcat.service
---------------------------------------------------------------------------
+
+
 [Unit]
 Description=Apache Tomcat Web Application Container
 After=network.target
@@ -73,7 +49,6 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 
---------------------------------------------------------------------------
 
 sudo systemctl daemon-reload
 sudo systemctl start tomcat
@@ -83,7 +58,7 @@ sudo ufw allow 8443
 sudo systemctl enable tomcat
 
 
-Configure Tomcat Web Management Interface
+#Configure Tomcat Web Management Interface
 
 
 sudo nano /opt/tomcat/conf/tomcat-users.xml
@@ -110,20 +85,16 @@ sudo nano /opt/tomcat/webapps/host-manager/META-INF/context.xml
 
 sudo systemctl restart tomcat
 
---------------------------------------------------------------------------
 
 
-                               Access the Web Interface
---------------------------------------------------------------------------------------------------------------------------------
+           Access the Web Interface
+----------------------------------------
 
-                   http://server_domain_or_IP:8080
-
-
+      http://server_domain_or_IP:8080
 
 
-
-         AuthBind configuration in Tomcat port 80, 443
---------------------------------------------------------------------------
+   AuthBind configuration in Tomcat port 80, 443
+-----------------------------------------------------
 
 sudo apt install authbind -y
 sudo touch /etc/authbind/byport/{443,80}
@@ -133,11 +104,11 @@ sudo sed -i 's/8080/80/g' /opt/tomcat/conf/server.xml
 sudo sed -i 's/8443/443/g' /opt/tomcat/conf/server.xml
 Sudo nano /opt/tomcat/bin/startup.sh
 
-Comment the last line and add the given line in startup.sh file
+#Comment the last line and add the given line in startup.sh file
 
 exec authbind --deep "$PRGDIR"/"$EXECUTABLE" start "$@"
 
-Save and Exit
+#Save and Exit
 
 sudo systemctl restart tomcat.service
 
@@ -145,7 +116,7 @@ sudo systemctl restart tomcat.service
 
 
                 Self Sign SSL configuration using Tomcat 8
--------------------------------------------------------------------------------------
+--------------------------------------------------------------------------
 
 keytool -genkey -alias Your_own_domain -keyalg RSA -keystore /etc/pki/keystore
 
@@ -169,12 +140,9 @@ sudo systemctl restart tomcat.service
          Threads configuration in port 80 and Port 443
 -------------------------------------------------------------------------------------
 
-
 For port 443
 
- 
-
-	<Connector port="8443" protocol="HTTP/1.1"
+      <Connector port="8443" protocol="HTTP/1.1"
                  connectionTimeout="20000"
                  minSpareThreads="10"
                  maxSpareThreads="100"
@@ -189,11 +157,7 @@ For port 443
                  keystoreFile="/etc/pki/keystore"
                  keystorePass="_password_" />
 
-
-
 For port 80 
-
-
 	
 	<Connector port="80" protocol="HTTP/1.1"
                  connectionTimeout="20000"
@@ -203,10 +167,6 @@ For port 80
                  acceptCount="100"
                  maxKeepAliveRequests=""	
                  redirectPort="443" />
-
-
-
-
 
 
 ------------------------------------------------------------------------
@@ -279,6 +239,7 @@ File to be edit conf/server.xml
 
 
 
+
 -------------------------------------------------------------------------------------
 
           Configuration of JVM memory for Apache Tomcat 
@@ -302,12 +263,3 @@ systemctl status tomcat.service
 
             Configuration of open file limit in Apache Tomcat 
 ------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
