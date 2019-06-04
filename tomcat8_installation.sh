@@ -1,5 +1,5 @@
    Apache Tomcat setup 8.5.41 with Ubuntu 16.04
--------------------------------------------------
+----------------------------------------------------
 
 timedatectl set-timezone Asia/Kolkata
 sudo apt-get update -y
@@ -87,7 +87,7 @@ sudo systemctl restart tomcat
 
 
            Access the Web Interface
-----------------------------------------
+-----------------------------------------------------
 
       http://server_domain_or_IP:8080
 
