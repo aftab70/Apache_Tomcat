@@ -59,15 +59,12 @@ sudo systemctl enable tomcat
 
 
 #Configure Tomcat Web Management Interface
-
-
+---------------------------------------------------
 sudo nano /opt/tomcat/conf/tomcat-users.xml
 
 <tomcat-users . . .>
     <user username="admin" password="password" roles="manager-gui,admin-gui"/>
 </tomcat-users>
-
-
 
 sudo nano /opt/tomcat/webapps/manager/META-INF/context.xml
 
@@ -121,9 +118,9 @@ keytool -genkey -alias Your_own_domain -keyalg RSA -keystore /etc/pki/keystore
 
 Need to edit server.xml file to add given param to configure ssl
 
-<Connector port="8443" protocol="HTTP/1.1"
+<Connector port="443" protocol="HTTP/1.1"
                 connectionTimeout="20000"
-                redirectPort="8443"
+                redirectPort="443"
                 SSLEnabled="true"
                 scheme="https"
                 secure="true"
@@ -141,7 +138,7 @@ sudo systemctl restart tomcat.service
 
 For port 443
 
-      <Connector port="8443" protocol="HTTP/1.1"
+      <Connector port="443" protocol="HTTP/1.1"
                  connectionTimeout="20000"
                  minSpareThreads="10"
                  maxSpareThreads="100"
@@ -168,14 +165,10 @@ For port 80
                  redirectPort="443" />
 
 
-------------------------------------------------------------------------
-
-
                VirtualHost configuration in Apache Tomcat 
 -------------------------------------------------------------------------------------
 
 #Your domain must be ping with your tomcat server IP address for virtual host.
-
 #File to be edit conf/server.xml
 -------------------------------------------------------------------------------------
 
@@ -206,31 +199,29 @@ For port 80
 </Host>
 
 
-#        Port Number based virtual hosting in Apache Tomcat 
+#        Port Number based virtual hosting in Apache Tomcat
 
-<Service name="service_name">
-    <Connector port="PORT_NUMBER" protocol="HTTP/1.1" connectionTimeout="20000" minSpareThreads="10" maxThreads="100" compression="on" compressableMimeType="text/html,text/xml,text/plain" redirectPort="8467" />
-      <!--- New Line Added for HTTPS Connection -->
-    <Connector SSLEnabled="true" acceptCount="100" clientAuth="false"
-    disableUploadTimeout="true" enableLookups="false" maxThreads="100"
-    port="8467" keystoreFile="/home/ginger/.keystore" keystorePass="123456"
-    protocol="org.apache.coyote.http11.Http11NioProtocol" scheme="https"
-    secure="true" sslProtocol="TLS" />
-    <Connector port="8009" protocol="AJP/1.3" redirectPort="8462" />
-    <Engine name="Catalina" defaultHost="localhost">
-      <Realm className="org.apache.catalina.realm.LockOutRealm">
-        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
-               resourceName="UserDatabase"/>
-      </Realm>
-      <Host name="localhost"  appBase="webapps/advertisement"
-            unpackWARs="true" autoDeploy="true">
-        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
-               prefix="localhost_access_log" suffix=".txt"
-               pattern="%h %l %u %t &quot;%r&quot; %D %s %b %{User-Agent}i %{Referer}i" />
+<Service name="app1">
+   <Connector port="8081" protocol="org.apache.coyote.http11.Http11NioProtocol" 
+           connectionTimeout="20000" 
+           redirectPort="8443" />
+   <Engine name="Catalina" defaultHost="localhost">
+      <Host name="localhost"  appBase="app1"
+        unpackWARs="true" autoDeploy="true">
       </Host>
-    </Engine>
+   </Engine>
 </Service>
 
+<Service name="app2">
+   <Connector port="8082" protocol="org.apache.coyote.http11.Http11NioProtocol" 
+           connectionTimeout="20000" 
+           redirectPort="8443" />
+   <Engine name="Catalina" defaultHost="localhost">
+      <Host name="localhost"  appBase="app2"
+        unpackWARs="true" autoDeploy="true">
+      </Host>
+   </Engine>
+</Service>
 
 
 -------------------------------------------------------------------------------------
