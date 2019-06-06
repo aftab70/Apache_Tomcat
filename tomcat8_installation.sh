@@ -431,3 +431,22 @@ Max realtime timeout      unlimited            unlimited            us
 #https://gist.github.com/luckydev/b2a6ebe793aeacf50ff15331fb3b519d
 #https://stackoverflow.com/questions/41272726/really-solve-too-many-open-files-at-a-process-level-not-on-global-ubuntu-level
 
+                          log rotate configuiration in tomcat 
+#############################################################################################################################
+
+
+    Create a configuration file in the following path: /etc/logrotate.d/ . For example: /etc/logrotate.d/tomcat
+    Insert the following to the above file:
+    /{PATH_TO_CATALINA_FILE}/*.* {
+    copytruncate
+    daily
+    rotate 3
+    compress
+    missingok
+    size 100M
+    }
+
+#############################################################################################################################
+			  
+			  
+
