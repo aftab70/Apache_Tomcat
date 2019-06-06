@@ -247,3 +247,187 @@ systemctl status tomcat.service
 
        Configuration of open file limit in Apache Tomcat 
 ------------------------------------------------------------------------
+
+#Step 1:- First sysAdmin need to check maximum capability of system.
+ 
+user@ubuntu:~$ cat /proc/sys/fs/file-max
+
+
+708444
+
+
+#Step 2:- Now need to verify available limit by using following commands.
+
+user@ubuntu:~$ ulimit -n
+
+
+1024
+
+#Step 3 :- To increase the available limit to say 200000 use the following commands.
+
+user@ubuntu:~$ sudo vim /etc/sysctl.conf
+
+# add the following line to it
+
+
+fs.file-max = 200000
+
+#Step 4 :- Need to  run this to refresh with new config
+
+user@ubuntu:~$ sudo sysctl -p
+
+#Step 5 :--Now need to edit the following file
+
+
+user@ubuntu:~$ sudo vim /etc/security/limits.conf
+
+# add following lines to it
+
+* soft  nofile  200000   
+* hard  nofile  200000
+your_username  soft  nofile  200000
+your_username  nofile  200000
+root soft nofile 200000   
+root hard nofile 200000
+
+
+Save and exit
+
+#Step 6 :-- Now need to edit the following file sudo vim /etc/pam.d/common-session
+
+
+user@ubuntu:~$ sudo vim /etc/pam.d/common-session
+
+# add this line to it
+
+
+session required pam_limits.so
+
+
+
+#Step 7 :- Now need to  logout and login and try the following command to get effects.
+
+user@ubuntu:~$ ulimit -n
+200000
+
+
+
+After configure ulimit in system, We need to configure tomcat for open files limit by following the steps,
+
+
+#Step1 :- Need to check PID of tomcat by following the commands 
+
+
+ systemctl status tomcat.service
+
+Now you should see like this output grep the tomcat service main process ID
+
+Loaded: loaded (/etc/systemd/system/tomcat.service; disabled; vendor preset: enabled)
+   Active: active (running) since Mon 2019-02-25 14:59:53 IST; 31min ago
+  Process: 26977 ExecStop=/opt/tomcat/bin/shutdown.sh (code=exited, status=0/SUCCESS)
+  Process: 27041 ExecStart=/opt/tomcat/bin/startup.sh (code=exited, status=0/SUCCESS)
+ Main PID: 27049 (java)
+   CGroup: /system.slice/tomcat.service
+           └─27049 /usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/bin/java -Djava.util.logging.config.file=/opt/tomca
+
+Feb 25 14:59:53 ginger-Lenovo-H50-50 systemd[1]: Starting Apache Tomcat Web Application Container...
+Feb 25 14:59:53 ginger-Lenovo-H50-50 systemd[1]: Started Apache Tomcat Web Application Container.
+
+
+#Step 2:-- Now you need to see open files limits by tomcat process id like this :--
+
+cat /proc/<processId>/limits
+
+Limit                     Soft Limit           Hard Limit           Units     
+Max cpu time              unlimited            unlimited            seconds   
+Max file size             unlimited            unlimited            bytes     
+Max data size             unlimited            unlimited            bytes     
+Max stack size            8388608              unlimited            bytes     
+Max core file size        0                    unlimited            bytes     
+Max resident set          unlimited            unlimited            bytes     
+Max processes             47597                47597                processes 
+Max open files            8192                 8192                 files     
+Max locked memory         65536                65536                bytes     
+Max address space         unlimited            unlimited            bytes     
+Max file locks            unlimited            unlimited            locks     
+Max pending signals       47597                47597                signals   
+Max msgqueue size         819200               819200               bytes     
+Max nice priority         0                    0                    
+Max realtime priority     0                    0                    
+Max realtime timeout      unlimited            unlimited            us        
+
+
+
+#Step 3:-- Now if you want to change open files limit of tomcat web server you need to edit the tomcat’s service file located in vim /etc/systemd/system/tomcat.service
+
+vim /etc/systemd/system/tomcat.service
+
+Open and add lines after [Services] like this 
+
+[Service]
+LimitNOFILE=8192
+
+The completed example is given below:--
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=network.target
+
+[Service]
+LimitNOFILE=10192
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/jre
+Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'
+Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'
+
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+
+
+User=tomcat
+Group=tomcat
+UMask=0007
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+Save and Exit
+
+#To get effects on tomcat services you need to restart the tomcat service but before that you must have to reload the daemons by using the given commands:--
+
+systemctl daemon-reload
+systemctl restart tomcat.service
+systemctl status tomcat.service
+
+#To  get again status of tomcat open files limit use the given commands with new tomcat PID 
+cat /proc/8005/limits
+#Now you should get output like that :--
+
+Limit                     Soft Limit           Hard Limit           Units     
+Max cpu time              unlimited            unlimited            seconds   
+Max file size             unlimited            unlimited            bytes     
+Max data size             unlimited            unlimited            bytes     
+Max stack size            8388608              unlimited            bytes     
+Max core file size        0                    unlimited            bytes     
+Max resident set          unlimited            unlimited            bytes     
+Max processes             47597                47597                processes 
+Max open files            100000               100000               files     
+Max locked memory         65536                65536                bytes     
+Max address space         unlimited            unlimited            bytes     
+Max file locks            unlimited            unlimited            locks     
+Max pending signals       47597                47597                signals   
+Max msgqueue size         819200               819200               bytes     
+Max nice priority         0                    0                    
+Max realtime priority     0                    0                    
+Max realtime timeout      unlimited            unlimited            us        
+
+#Now our user limit for tomcat’s open files configuration is completed. 
+#Reference url mentioned below:--
+#https://gist.github.com/luckydev/b2a6ebe793aeacf50ff15331fb3b519d
+#https://stackoverflow.com/questions/41272726/really-solve-too-many-open-files-at-a-process-level-not-on-global-ubuntu-level
+
