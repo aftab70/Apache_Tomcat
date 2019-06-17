@@ -201,27 +201,54 @@ For port 80
 
 #        Port Number based virtual hosting in Apache Tomcat
 
-<Service name="app1">
-   <Connector port="8081" protocol="org.apache.coyote.http11.Http11NioProtocol" 
-           connectionTimeout="20000" 
-           redirectPort="8443" />
-   <Engine name="Catalina" defaultHost="localhost">
-      <Host name="localhost"  appBase="app1"
-        unpackWARs="true" autoDeploy="true">
+<Service name="module_1">
+    <Connector port="8120" protocol="HTTP/1.1" connectionTimeout="20000" minSpareThreads="10" maxThreads="100" compression="on" compressableMimeType="text/html,text/xml,text/plain" redirectPort="8463" />
+      <!--- New Line Added for HTTPS Connection -->
+    <Connector SSLEnabled="true" acceptCount="100" clientAuth="false"
+    disableUploadTimeout="true" enableLookups="false" maxThreads="100"
+    port="8463" keystoreFile="keystore_file_path" keystorePass="Password"
+    protocol="org.apache.coyote.http11.Http11NioProtocol" scheme="https"
+    secure="true" sslProtocol="TLS" />
+    <Connector port="8009" protocol="AJP/1.3" redirectPort="8462" />
+    <Engine name="Catalina" defaultHost="localhost">
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+               resourceName="UserDatabase"/>
+      </Realm>
+      <Host name="localhost"  appBase="webapps/module_1/"
+            unpackWARs="true" autoDeploy="true">
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %D %s %b %{User-Agent}i %{Referer}i" />
       </Host>
-   </Engine>
+    </Engine>
 </Service>
 
-<Service name="app2">
-   <Connector port="8082" protocol="org.apache.coyote.http11.Http11NioProtocol" 
-           connectionTimeout="20000" 
-           redirectPort="8443" />
-   <Engine name="Catalina" defaultHost="localhost">
-      <Host name="localhost"  appBase="app2"
-        unpackWARs="true" autoDeploy="true">
+
+<Service name="module_2">
+    <Connector port="8120" protocol="HTTP/1.1" connectionTimeout="20000" minSpareThreads="10" maxThreads="100" compression="on" compressableMimeType="text/html,text/xml,text/plain" redirectPort="8463" />
+      <!--- New Line Added for HTTPS Connection -->
+    <Connector SSLEnabled="true" acceptCount="100" clientAuth="false"
+    disableUploadTimeout="true" enableLookups="false" maxThreads="100"
+    port="8463" keystoreFile="keystore_file_path" keystorePass="Password"
+    protocol="org.apache.coyote.http11.Http11NioProtocol" scheme="https"
+    secure="true" sslProtocol="TLS" />
+    <Connector port="8009" protocol="AJP/1.3" redirectPort="8462" />
+    <Engine name="Catalina" defaultHost="localhost">
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+               resourceName="UserDatabase"/>
+      </Realm>
+      <Host name="localhost"  appBase="webapps/module_2/"
+            unpackWARs="true" autoDeploy="true">
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %D %s %b %{User-Agent}i %{Referer}i" />
       </Host>
-   </Engine>
+    </Engine>
 </Service>
+
+
 
 
 -------------------------------------------------------------------------------------
