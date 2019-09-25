@@ -10,13 +10,22 @@ To start the docker container by follwoing the cli:-
 
 docker start tomcat1 tomcat2 tomcat3
 
-To login Docker container 
+Docker basic installation container 
 
-docker exec -it tomcat1 /bin/bash
+docker exec -it tomcat1 apt-get update -y && apt install vim net-tools iputils-ping -y
 
-docker exec -it tomcat2 /bin/bash
+docker exec -it tomcat2 apt-get update -y && apt install vim net-tools iputils-ping -y
 
-docker exec -it tomcat3 /bin/bash
+docker exec -it tomcat3 apt-get update -y && apt install vim net-tools iputils-ping -y
+
+login with Docker container
+
+docker exec -it tomcat1 bin/bash
+
+docker exec -it tomcat2 bin/bash
+
+docker exec -it tomcat3 bin/bash
+
 
 Tomcat 8 installation docker bash script :-
 
