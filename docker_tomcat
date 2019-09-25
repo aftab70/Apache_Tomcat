@@ -1,0 +1,37 @@
+To create docker container by following the cli:-
+
+docker run -v /docker/tomcat1/webapps:/opt/tomcat/webapps --hostname tomcat1 --name tomcat1 -p 8989:8080 -it ubuntu
+
+docker run -v /docker/tomcat2/webapps:/opt/tomcat/webapps --hostname tomcat2 --name tomcat2 -p 9090:8080 -it ubuntu
+
+docker run -v /docker/tomcat3/webapps:/opt/tomcat/webapps --hostname tomcat3 --name tomcat3 -p 9191:8080 -it ubuntu
+
+To start the docker container by follwoing the cli:-
+
+docker start tomcat1 tomcat2 tomcat3
+
+To login Docker container 
+
+docker exec -it tomcat1 /bin/bash
+
+docker exec -it tomcat2 /bin/bash
+
+docker exec -it tomcat3 /bin/bash
+
+Tomcat 8 installation docker bash script :-
+
+apt-get update -y && apt install vim net-tools iputils-ping -y  
+apt-get install default-jdk -y
+groupadd tomcat
+useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
+cd /tmp
+apt-get install curl -y
+curl -O http://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.46/bin/apache-tomcat-8.5.46.tar.gz
+tar xzvf apache-tomcat-8*tar.gz -C /opt/tomcat --strip-components=1
+cd /opt/tomcat
+chgrp -R tomcat /opt/tomcat
+chmod -R g+r conf
+chmod g+x conf
+chown -R tomcat webapps/ work/ temp/ logs/
+sh /opt/tomcat/bin/startup.sh
+#sh /opt/tomcat/bin/shutdown.sh
