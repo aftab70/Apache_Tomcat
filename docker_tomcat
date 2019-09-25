@@ -1,3 +1,4 @@
+###################################### Docker Tomcat installation using Ubuntu 18.04 ########################################
 To create docker container by following the cli:-
 
 docker run -v /docker/tomcat1/webapps:/opt/tomcat/webapps --hostname tomcat1 --name tomcat1 -p 8989:8080 -it ubuntu
@@ -12,11 +13,7 @@ docker start tomcat1 tomcat2 tomcat3
 
 Docker basic installation container 
 
-docker exec -it tomcat1 apt-get update -y && apt install vim net-tools iputils-ping -y
-
-docker exec -it tomcat2 apt-get update -y && apt install vim net-tools iputils-ping -y
-
-docker exec -it tomcat3 apt-get update -y && apt install vim net-tools iputils-ping -y
+apt-get update -y && apt install vim net-tools iputils-ping -y
 
 login with Docker container
 
@@ -28,8 +25,12 @@ docker exec -it tomcat3 bin/bash
 
 
 Tomcat 8 installation docker bash script :-
+-----------------------------------------------------------------------------------------------------------------------------
 
-apt-get update -y && apt install vim net-tools iputils-ping -y  
+#!/bin/bash
+
+set -x
+set -e
 apt-get install default-jdk -y
 groupadd tomcat
 useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
@@ -44,3 +45,4 @@ chmod g+x conf
 chown -R tomcat webapps/ work/ temp/ logs/
 sh /opt/tomcat/bin/startup.sh
 #sh /opt/tomcat/bin/shutdown.sh
+------------------------------------------------------------------------------------------------------------------------------
