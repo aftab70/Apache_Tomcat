@@ -44,3 +44,22 @@ chmod g+x conf
 chown -R tomcat webapps/ work/ temp/ logs/
 sh /opt/tomcat/bin/startup.sh
 #sh /opt/tomcat/bin/shutdown.sh
+
+
+########################################### Apache Tomcat dockerfile #####################################################
+
+FROM ubuntu:latest
+RUN apt-get update -y && apt-get install default-jdk -y
+RUN groupadd tomcat
+RUN useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
+RUN cd /tmp && apt-get install curl -y
+RUN curl -O http://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.46/bin/apache-tomcat-8.5.46.tar.gz
+RUN mkdir /opt/tomcat && cd /opt/tomcat
+RUN chgrp -R tomcat /opt/tomcat
+RUN chmod -R g+r conf
+RUN chmod g+x conf
+RUN chown -R tomcat webapps/ work/ temp/ logs/
+EXPOSE 8080
+CMD /opt/tomcat/bin/startup.sh run
+
+#########################################################################################################################
