@@ -1,0 +1,10 @@
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               compression="on"
+               compressionMinSize="8192"
+               useSendfile="false"
+               compressableMimeType="text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,text/json,application/json"
+               redirectPort="8443" />
+    <!-- A "Connector" using the shared thread pool-->
+
+################################################################################################################################################
